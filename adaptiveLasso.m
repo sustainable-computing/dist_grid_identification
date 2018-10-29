@@ -39,12 +39,12 @@ switch mode
 end
 
 selector = ones(2*length(hw),1);
-% for i = 1:length(hw)
-%     if abs(hw(i))==0
-%         selector(i)=0;
-%         selector(NODES+i)=0;
-%     end
-% end
+for i = 1:length(hw)
+    if abs(hw(i))==0
+         selector(i)=0;
+         selector(NODES+i)=0;
+     end
+ end
 
 re_beta = 1./(power(abs(real(hw)),gamma)+1e-2);
 im_beta = 1./(power(abs(imag(hw)),gamma)+1e-2);
@@ -60,11 +60,11 @@ variable W(2*NODES,1)
 minimize( square_pos( norm( X * ( selector .* W ) - Y , 2 ) ) + lambda * norm( beta .* W , 1 ) );
 cvx_end
 
-% for i = 1:length(selector)
-%     if selector(i)==0
-%         W(i)=0;
-%     end
-% end
+ for i = 1:length(selector)
+     if selector(i)==0
+         W(i)=0;
+     end
+ end
 
 W = W(1:NODES) + 1j * W(NODES+1:2*NODES);
 
