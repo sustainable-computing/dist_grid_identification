@@ -22,3 +22,4 @@ function C = contr(r)
             end
         end
     end
+end
