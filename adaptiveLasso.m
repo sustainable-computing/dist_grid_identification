@@ -18,8 +18,8 @@ Y = [re_y; im_y];
 % first stage method
 switch mode
     case 1  % OLS regression
-        hw = Phi\hc;
-%         hw = pinv(full(Phi))*hc;
+        hw = Phi\hc;  % for 13 bus
+%         hw = pinv(full(Phi))*hc;  %for 34 37 bus
     case 2  % LASSO regression
         cvx_begin quiet
         %cvx_begin
