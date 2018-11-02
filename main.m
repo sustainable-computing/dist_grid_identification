@@ -7,7 +7,8 @@ realistic = false;
 
 % simLength = 86400;
 topoChangeFlag = false;
-
+Tol=1e-9; % a threshold for choosing the nodes in V2
+% r=27; % a estimated rank of matrix V 
 simLength = 288;
 D = 288;
 % topoChangeFlag = true;
@@ -229,10 +230,16 @@ clear I_inj
 if topoChangeFlag
     [~,idx] = licols(V(:,1:transitionTime1-1)');
 else
-    [~,idx] = licols(V');
+     [~,idx] = licols(V',Tol);  Tol is threshold 
+    % [~,idx] = licolsR(V',r);  % R is a estimated rank of V
     %idx = idx(2:end);
-    
+    % the selected indices for IEEE 13 bus
     %idx = [1,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+    % the selected indices for IEEE 34 bus
+%     idx = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,29,30,31,32,33,...
+%        34,35,36,37,38,39,40,41,42,43,44,45,46,47,51,52,53,54,55,56,57,58,...
+%        59,60,61,62,63,64,65,66,67,68,71,72,73,74,75,76,77,78,79,80,84,85,...
+%         86,87,88,89,90,91,92,93,94,95];
 end
 
 %% run Identification
