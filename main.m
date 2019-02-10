@@ -230,7 +230,7 @@ clear I_inj
 if topoChangeFlag
     [~,idx] = licols(V(:,1:transitionTime1-1)');
 else
-     [~,idx] = licols(V',Tol);  Tol is threshold 
+     [~,idx] = licols(V',Tol);  % Tol is threshold 
     % [~,idx] = licolsR(V',r);  % R is a estimated rank of V
     %idx = idx(2:end);
     % the selected indices for IEEE 13 bus
