@@ -8,7 +8,7 @@ close all
 % simLength = 86400;
 topoChangeFlag = false;
 Tol=1e-9; % a threshold for choosing the nodes in V2
-% r=27; % a estimated rank of matrix V 
+% r=27; % a estimated rank of matrix V
 simLength = 288;
 D = 288;
 % topoChangeFlag = true;
@@ -74,7 +74,7 @@ if realistic
     load realpower1260homes-1day.mat
     load reactivepower1260homes-1day.mat
     [P, Q] = connectLoads2NodesPQ(Pn, Qn, homesPerNode, offset, offset+simLength-1);
-    
+
     % creates constant complex power load aggregate at the bus level
     % P is a NODES by simLength matrix of real power injection
     % Q is a NODES by simLength matrix of reactive power injection
@@ -120,8 +120,8 @@ for i=1:simLength
     end
     [V(:,i), I1(:,i), I2(:,i)] = runPF(P(:,i), Q(:,i), mappingNode2Terminal, DSSObj);
 %     [V(:,i), I1(:,i), I2(:,i)] = runPF2(mappingNode2Terminal, DSSObj);
-    
-    
+
+
     % run power flow to get bus voltages and current flows in the
     % network
     display(['power flow simulation completed for t = ' num2str(i)])
@@ -156,11 +156,11 @@ I = II;
 if withNoise
     relerrV = 0.00000001;
     relerrI = 0.001;
-    
+
     for i=1:NODES
         stdV(i,:) = V(i,:)*relerrV/2.58;
         stdI(i,:) = I(i,:)*relerrI/2.58;
-        
+
 %         noiseI(i,:) = awgn(I(i,:),snr_i,'measured');
 %         noiseV(i,:) = awgn(V(i,:),snr_v,'measured');
 
@@ -188,11 +188,11 @@ if topoChangeFlag
     I_inj = Y1*V;
     %I(1:3,transitionTime1:transitionTime2-1) = I_inj(1:3,transitionTime1:transitionTime2-1);
     I(1:3,transitionTime1:end) = I_inj(1:3,transitionTime1:end);
-    
+
     %I_inj = Y2*V;
     %I(1:3,transitionTime2:end) = I_inj(1:3,transitionTime2:end);
-    
-    
+
+
     checksum1 = Y*V(:,1:transitionTime1-1)-I(:,1:transitionTime1-1);
     checksum2 = Y1*V(:,transitionTime1:end)-I(:,transitionTime1:end);
     display(max(max(checksum1)))
@@ -200,9 +200,9 @@ if topoChangeFlag
 else
     I_inj = Y*V;
     I(1:3,:) = I_inj(1:3,:);
-    
+
     checksum = Y*V-I;
-    
+
 %     checksum(abs(checksum)<5e-5)=0;
     display(max(max(checksum)))
 end
@@ -216,7 +216,7 @@ end
 % checksumS = S(4:NODES,:) + power_inj(4:NODES,:);
 % checksumS(abs(checksumS)<5e-5)=0;
 
-% perform singular value decomposition of V 
+% perform singular value decomposition of V
 svdV = svd(V);
 
 clear I_inj
@@ -230,7 +230,7 @@ clear I_inj
 if topoChangeFlag
     [~,idx] = licols(V(:,1:transitionTime1-1)');
 else
-    % [~,idx] = licols(V',Tol);  % Tol is threshold 
+    % [~,idx] = licols(V',Tol);  % Tol is threshold
     % [~,idx] = licolsR(V',r);  % R is a estimated rank of V
     %idx = idx(2:end);
     % the selected indices for IEEE 13 bus
@@ -273,7 +273,7 @@ generateHeatmap(rel_error);
 %%
 % specify the number of hidden nodes, and tuning parameter lambda
 
-SY = Y(nh_idx,nh_idx) - Y(nh_idx,h_idx)*inv(Y(h_idx,h_idx))*Y(h_idx,nh_idx); %Schur complement 
+SY = Y(nh_idx,nh_idx) - Y(nh_idx,h_idx)*inv(Y(h_idx,h_idx))*Y(h_idx,nh_idx); %Schur complement
 
 lambda = 1;
 [A, B] = runID_hidden(SY,lambda);
@@ -281,18 +281,18 @@ lambda = 1;
 generateHeatmap(abs(Y(nh_idx,nh_idx)-A));
 
 % %% Topology Change Detection
-% 
+%
 % searchStartTime = transitionTime1-5;
 % searchEndTime = transitionTime1+25;
 % lookback = searchStartTime - 40;
 % threshold = 1;
-% 
+%
 % for tt=searchStartTime:searchEndTime
 %     Y_known = Y; % Y_est
-%     
+%
 %     difference = max(max(abs(Y_known*V(:,lookback:tt)-I(:,lookback:tt))));
 %     display(difference)
-%     
+%
 %     if difference>threshold
 %         identifiedTransitionTime = tt;
 %         break
@@ -300,15 +300,15 @@ generateHeatmap(abs(Y(nh_idx,nh_idx)-A));
 % end
 % display(identifiedTransitionTime)
 % %%
-% 
+%
 % lambda = 0.00009;
 % iter_end = 1;
-% 
+%
 % %Y_known = Y_est;
 % [DeltaY, NewY, ~] = runDT(V(:,identifiedTransitionTime:searchEndTime), I(:,identifiedTransitionTime:searchEndTime), Y_known, lambda, iter_end);
-% 
+%
 % generateHeatmap(abs(DeltaY));
-% 
+%
 % display(max(max(abs(NewY-Y1))))
 % display(norm(abs(NewY-Y1),'fro'))
 % error = abs(NewY-Y1);
