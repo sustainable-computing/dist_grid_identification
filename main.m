@@ -2,7 +2,7 @@
 clear all
 close all
 
-realistic = false;
+ realistic = false;
 % realistic = true;
 
 % simLength = 86400;
@@ -230,11 +230,11 @@ clear I_inj
 if topoChangeFlag
     [~,idx] = licols(V(:,1:transitionTime1-1)');
 else
-     [~,idx] = licols(V',Tol);  Tol is threshold 
+    % [~,idx] = licols(V',Tol);  % Tol is threshold 
     % [~,idx] = licolsR(V',r);  % R is a estimated rank of V
     %idx = idx(2:end);
     % the selected indices for IEEE 13 bus
-    %idx = [1,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+    idx = [1,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
     % the selected indices for IEEE 34 bus
 %     idx = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,29,30,31,32,33,...
 %        34,35,36,37,38,39,40,41,42,43,44,45,46,47,51,52,53,54,55,56,57,58,...
@@ -280,37 +280,37 @@ lambda = 1;
 
 generateHeatmap(abs(Y(nh_idx,nh_idx)-A));
 
-%% Topology Change Detection
-
-searchStartTime = transitionTime1-5;
-searchEndTime = transitionTime1+25;
-lookback = searchStartTime - 40;
-threshold = 1;
-
-for tt=searchStartTime:searchEndTime
-    Y_known = Y; % Y_est
-    
-    difference = max(max(abs(Y_known*V(:,lookback:tt)-I(:,lookback:tt))));
-    display(difference)
-    
-    if difference>threshold
-        identifiedTransitionTime = tt;
-        break
-    end
-end
-display(identifiedTransitionTime)
-%%
-
-lambda = 0.00009;
-iter_end = 1;
-
-%Y_known = Y_est;
-[DeltaY, NewY, ~] = runDT(V(:,identifiedTransitionTime:searchEndTime), I(:,identifiedTransitionTime:searchEndTime), Y_known, lambda, iter_end);
-
-generateHeatmap(abs(DeltaY));
-
-display(max(max(abs(NewY-Y1))))
-display(norm(abs(NewY-Y1),'fro'))
+% %% Topology Change Detection
+% 
+% searchStartTime = transitionTime1-5;
+% searchEndTime = transitionTime1+25;
+% lookback = searchStartTime - 40;
+% threshold = 1;
+% 
+% for tt=searchStartTime:searchEndTime
+%     Y_known = Y; % Y_est
+%     
+%     difference = max(max(abs(Y_known*V(:,lookback:tt)-I(:,lookback:tt))));
+%     display(difference)
+%     
+%     if difference>threshold
+%         identifiedTransitionTime = tt;
+%         break
+%     end
+% end
+% display(identifiedTransitionTime)
+% %%
+% 
+% lambda = 0.00009;
+% iter_end = 1;
+% 
+% %Y_known = Y_est;
+% [DeltaY, NewY, ~] = runDT(V(:,identifiedTransitionTime:searchEndTime), I(:,identifiedTransitionTime:searchEndTime), Y_known, lambda, iter_end);
+% 
+% generateHeatmap(abs(DeltaY));
+% 
+% display(max(max(abs(NewY-Y1))))
+% display(norm(abs(NewY-Y1),'fro'))
 % error = abs(NewY-Y1);
 % generateHeatmap(error(idx,idx))
 
