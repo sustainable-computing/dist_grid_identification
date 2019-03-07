@@ -15,11 +15,7 @@ nNodes = length(DSSCircuit.YNodeOrder);
 % include the norton equivalent of the loads
 
 DSSText.Command = 'vsource.source.enabled = no';
-lelem = DSSCircuit.Loads.First;
-while lelem>0
-    DSSText.Command = ['Load.' cellstr(DSSCircuit.Loads.Name) '.enabled = no'];
-    lelem = DSSCircuit.Loads.Next;
-end
+DSSText.Command = 'batchedit load..* enabled=no';
 
 DSSCircuit.Solution.Solve;
 
@@ -36,10 +32,6 @@ Y = Y(:,1:2:(nNodes*2)) + 1i*Y(:,2:2:nNodes*2);
 % reconnecting loads and generators
 
 DSSText.Command = 'vsource.source.enabled = yes';
-lelem = DSSCircuit.Loads.First;
-while lelem>0
-    DSSText.Command = ['Load.' cellstr(DSSCircuit.Loads.Name) '.enabled = yes'];
-    lelem = DSSCircuit.Loads.Next;
-end
+DSSText.command = 'batchedit load..* enabled=yes';
 
 end
