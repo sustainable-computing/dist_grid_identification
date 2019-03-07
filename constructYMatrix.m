@@ -10,6 +10,7 @@ function [Y] = constructYMatrix(DSSObj)
 
 DSSCircuit = DSSObj.ActiveCircuit;
 nNodes = length(DSSCircuit.YNodeOrder);
+DSSText = DSSObj.Text;
 
 % disconnecting loads and generators to obtain a Y matrix that does not
 % include the norton equivalent of the loads
